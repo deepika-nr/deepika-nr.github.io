@@ -1,22 +1,83 @@
-// ======================================
-// SMOOTH SCROLLING
-// ======================================
+/* =====================================================
+   MOBILE MENU
+===================================================== */
 
-document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+const menuButton = document.getElementById("menuButton");
 
-    link.addEventListener("click", function (event) {
+const navLinks = document.getElementById("navLinks");
 
-        event.preventDefault();
 
-        const targetId = this.getAttribute("href");
+menuButton.addEventListener("click", function () {
 
-        const targetSection = document.querySelector(targetId);
+    navLinks.classList.toggle("show");
 
-        if (targetSection) {
+});
 
-            targetSection.scrollIntoView({
-                behavior: "smooth"
-            });
+
+/* =====================================================
+   CLOSE MOBILE MENU AFTER CLICKING A LINK
+===================================================== */
+
+const navigationLinks =
+    document.querySelectorAll(".nav-links a");
+
+
+navigationLinks.forEach(function (link) {
+
+    link.addEventListener("click", function () {
+
+        navLinks.classList.remove("show");
+
+    });
+
+});
+
+
+/* =====================================================
+   ACTIVE NAVIGATION LINK
+===================================================== */
+
+const sections =
+    document.querySelectorAll("section");
+
+const links =
+    document.querySelectorAll(".nav-links a");
+
+
+window.addEventListener("scroll", function () {
+
+    let currentSection = "";
+
+    sections.forEach(function (section) {
+
+        const sectionTop =
+            section.offsetTop - 150;
+
+        const sectionHeight =
+            section.offsetHeight;
+
+        if (
+            window.scrollY >= sectionTop &&
+            window.scrollY < sectionTop + sectionHeight
+        ) {
+
+            currentSection = section.getAttribute("id");
+
+        }
+
+    });
+
+
+    links.forEach(function (link) {
+
+        link.classList.remove("active");
+
+        if (
+            link.getAttribute("href") ===
+            "#" + currentSection
+        ) {
+
+            link.classList.add("active");
 
         }
 
@@ -25,61 +86,43 @@ document.querySelectorAll('a[href^="#"]').forEach(function (link) {
 });
 
 
-// ======================================
-// SCROLL REVEAL ANIMATION
-// ======================================
+/* =====================================================
+   ADD ACTIVE LINK STYLE
+===================================================== */
 
-const animatedElements = document.querySelectorAll(
-    ".section-title, .about-content, .skill-card, .project-card, .internship-card, .education-card, .certification-card, .contact-container"
-);
+const style = document.createElement("style");
+
+style.innerHTML = `
+
+    .nav-links a.active {
+        color: #6ff2ff;
+    }
+
+`;
+
+document.head.appendChild(style);
 
 
-// Add animation class
-animatedElements.forEach(function (element) {
-    element.classList.add("animate");
+/* =====================================================
+   CLOSE MENU WHEN CLICKING OUTSIDE
+===================================================== */
+
+document.addEventListener("click", function (event) {
+
+    const clickedInsideMenu =
+        navLinks.contains(event.target);
+
+    const clickedMenuButton =
+        menuButton.contains(event.target);
+
+
+    if (
+        !clickedInsideMenu &&
+        !clickedMenuButton
+    ) {
+
+        navLinks.classList.remove("show");
+
+    }
+
 });
-
-
-// Check which elements are visible
-function revealElements() {
-
-    animatedElements.forEach(function (element) {
-
-        const elementTop = element.getBoundingClientRect().top;
-
-        const windowHeight = window.innerHeight;
-
-        if (elementTop < windowHeight - 100) {
-
-            element.classList.add("show");
-
-        }
-
-    });
-
-}
-
-
-// Run when scrolling
-window.addEventListener("scroll", revealElements);
-
-
-// Run when page loads
-window.addEventListener("load", revealElements);
-
-
-// ======================================
-// RESUME BUTTON
-// ======================================
-
-const resumeButton = document.querySelector(".resume-btn");
-
-if (resumeButton) {
-
-    resumeButton.addEventListener("click", function () {
-
-        console.log("Resume download started");
-
-    });
-
-}
